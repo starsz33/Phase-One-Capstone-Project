@@ -1,66 +1,82 @@
 import Models.*;
+import Service.UniversityManager;
+import Exception.CourseFullException;
+import Exception.StudentAlreadyEnrolledException;
+
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
 
-                // Create Students
-                UndergraduateStudent undergrad =
-                        new UndergraduateStudent("esther","sss","CSE",222);
+        UniversityManager manager = new UniversityManager();
 
-                GraduateStudent grad =
-                        new GraduateStudent("anne","ss","IS",333,20);
+        Course java = new Course("CS44","Computer Ethics",10,3);
+        Course ds = new Course("ET44","Java Programming ",50,70);
+        Course ai = new Course("CS201", "Artificial Intelligence", 8,50);
 
-                // Create Courses
-                Course javaCourse = new Course("CO999","Java ",10,40);
-                Course dbCourse = new Course("CS202", "Database Systems", 4, 25);
+        manager.createCourse(java);
+        manager.createCourse(ds);
+        manager.createCourse(ai);
 
-                // Enroll Students manually (without manager for now)
-                javaCourse.addStudent(undergrad);
-                undergrad.addCourse(javaCourse);
+        // create Student
+        Student s1 = new UndergraduateStudent("Kaline", "Esthe@gmail.com", "Computer Science",33333);
+        Student s2 = new UndergraduateStudent("Uwera", "Anne@gmail.com", "Computer Science",22201);
+        Student s3 = new GraduateStudent("Esther","est@gmail.com","Information Technology",5555,6000);
+        Student s4 = new GraduateStudent("Aline", "Sarah@gmail.com", "Information Systems",444477,6000);
 
-                dbCourse.addStudent(grad);
-                grad.addCourse(dbCourse);
-        System.out.println();
+        manager.registerStudent(s1);
+        manager.registerStudent(s2);
+        manager.registerStudent(s3);
+        manager.registerStudent(s4);
 
-                // Print Student Details
-                System.out.println(undergrad.getDetails());
-                System.out.println("Undergrad Tuition: " + undergrad.calculateTuition());
+        try {
 
-                System.out.println("---------------------");
+            manager.enrollStudentInCourse(s1, java);
+            manager.enrollStudentInCourse(s1, ds);
 
-                System.out.println(grad.getDetails());
-                System.out.println("Graduate Tuition: " + grad.calculateTuition());
+            manager.enrollStudentInCourse(s2, java);
+            manager.enrollStudentInCourse(s2, ds);
 
-                // Check relationships
-                System.out.println("---------------------");
-                System.out.println("Java Course Roster:");
-                for (Student s : javaCourse.getRoster()) {
-                    System.out.println(s.getname());
-                }
+            manager.enrollStudentInCourse(s3, java);
+            manager.enrollStudentInCourse(s3, ai);
 
-                System.out.println("---------------------");
-                System.out.println("Graduate Student Courses:");
-                grad.getCourses().forEach((course, grade) ->
-                        System.out.println(course.getCourseCode()));
+            manager.enrollStudentInCourse(s4, ai);
+            manager.enrollStudentInCourse(s1, java);
 
-        Instructor instructor=new Instructor("KALISA","EEE","CSE",400);
-        instructor.getDetails();
+        } catch (CourseFullException e) {
+            System.out.println("FULL ERROR: " + e.getMessage());
+        } catch (StudentAlreadyEnrolledException e) {
+            System.out.println("DUPLICATE ERROR: " + e.getMessage());
+        }
 
-        Student undergrad1 = new UndergraduateStudent("esther", "e@mail.com", "22222", 555);
-        Student grad1= new GraduateStudent("anne", "a@mail.com", "33440",4444,6500);
-             grad1.setTotalCredits(5);
-        System.out.println(grad.calculateTuition());
+        s1.updateGrade(java, 3.7);
+        s1.updateGrade(ds, 3.5);
 
-        undergrad.updateGrade(javaCourse, 3.7);
-        grad.updateGrade(dbCourse, 3.9);
+        s2.updateGrade(java, 3.9);
+        s2.updateGrade(ds, 3.8);
 
-        System.out.println("Undergrad GPA: " + undergrad.getGPA());
-        System.out.println("Graduate GPA: " + grad.getGPA());
+        s3.updateGrade(java, 4.0);
+        s3.updateGrade(ai, 3.9);
 
+        s4.updateGrade(ai, 3.6);
 
+        System.out.println("\n=== STREAM TESTING ===");
+
+        double avgCS = manager.calculateAverageGPAByDepartment("Computer Science");
+        System.out.println("Average GPA (Computer Science): " + avgCS);
+
+        Student top = manager.findTopPerformingStudent();
+        if (top != null) {
+            System.out.println("Top Student: " + top.getname() +
+                    " | GPA: " + top.getGPA());
+        }
+        System.out.println("\n=== ALL STUDENTS ===");
+        for (Student s : manager.getStudents()) {
+            System.out.println(s.getname() +
+                    " | Dept: " + s.getDepartment() +
+                    " | GPA: " + s.getGPA());
+        }
     }
-            }
-
-
-
-
+}
