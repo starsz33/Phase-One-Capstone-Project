@@ -61,7 +61,6 @@ public class Main {
                     if ("1".equals(type)) {
                         student = new UndergraduateStudent(name, email, dept, id);
                     } else {
-                        // Default amount per credit for graduate students
                         int defaultAmountPerCredit = 5000;
                         student = new GraduateStudent(name, email, dept, id, defaultAmountPerCredit);
                     }
@@ -70,7 +69,7 @@ public class Main {
                     System.out.println("Student registered: " + student.getname());
                 }
 
-                case "2" -> {  // Create Course
+                case "2" -> {
                     System.out.print("Course Code: ");
                     String code = scanner.nextLine();
                     System.out.print("Course Name: ");
@@ -95,15 +94,13 @@ public class Main {
                         manager.enrollStudentInCourse(sid, ccode);
                         System.out.println("Enrollment successful!");
                     } catch (CourseFullException | StudentAlreadyEnrolledException e) {
-                        // Handle custom exceptions
                         System.out.println("ERROR: " + e.getMessage());
                     } catch (Exception e) {
-                        // Handle other exceptions
                         System.out.println("ERROR: " + e.getMessage());
                     }
                 }
 
-                case "4" -> {  // Update Student Grade
+                case "4" -> {
                     System.out.print("Student ID: ");
                     String sid = scanner.nextLine();
                     Student student = manager.findStudentById(sid);
@@ -151,7 +148,7 @@ public class Main {
                     }
                 }
 
-                case "6" -> {  // Dean's List
+                case "6" -> {
                     System.out.println("\n=== DEAN'S LIST ===");
                     manager.getAllStudents().stream()
                             .filter(s -> s.getGPA() > 3.5)
@@ -159,7 +156,7 @@ public class Main {
                                     s.getname(), s.getDepartment(), s.getGPA()));
                 }
 
-                case "7" -> {  // Save & Exit
+                case "7" -> {
                     FileManager.saveStudents(manager.getAllStudents());
                     FileManager.saveCourses(manager.getAllCourses());
                     System.out.println("Data saved. Exiting...");

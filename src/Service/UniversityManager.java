@@ -17,8 +17,6 @@ public class UniversityManager {
         this.students = new ArrayList<>();
         this.courses = new ArrayList<>();
     }
-
-    // ----------------- Students -----------------
     public void registerStudent(Student student) {
         students.add(student);
     }
@@ -33,8 +31,6 @@ public class UniversityManager {
                 .findFirst()
                 .orElse(null);
     }
-
-    // ----------------- Courses -----------------
     public void addCourse(Course course) {
         courses.add(course);
     }
@@ -42,38 +38,26 @@ public class UniversityManager {
     public List<Course> getAllCourses() {
         return courses;
     }
-
-    // Enrolls a student in a course with proper exception handling
     public void enrollStudentInCourse(String studentId, String courseCode)
             throws CourseFullException, StudentAlreadyEnrolledException {
-        // Find the student by ID
         Student student = findStudentById(studentId);
-        // Find the course by code
         Course course = courses.stream()
                 .filter(c -> c.getCourseCode().equals(courseCode))
                 .findFirst()
                 .orElse(null);
-
-        // Validate student and course exist
         if (student == null || course == null) {
             throw new IllegalArgumentException("Student or Course not found!");
         }
-
-        // Check if course is full
         if (course.getStudents().size() >= course.getMaxStudents()) {
             throw new CourseFullException("Course " + courseCode + " is full!");
         }
 
-        // Check if student is already enrolled
         if (course.getStudents().contains(student)) {
             throw new StudentAlreadyEnrolledException("Student " + studentId + " is already enrolled in " + courseCode);
         }
-
-        // Enroll the student
         course.getStudents().add(student);
-        student.addCourse(course); // This now also updates total credits
+        student.addCourse(course);
     }
-    // Calculates average GPA for all students in a specific department
     public double calculateAverageGPAByDepartment(String department) {
 
         double totalGPA = 0;
@@ -92,7 +76,6 @@ public class UniversityManager {
 
         return totalGPA / count;
     }
-    // Finds the student with the highest GPA
     public Student findTopPerformingStudent() {
 
         if (students == null || students.isEmpty()) {

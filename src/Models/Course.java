@@ -3,8 +3,6 @@ package Models;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-    // Course class to manage course details and student roster
     public class Course {
         private String courseCode;
         private String courseName;
@@ -44,8 +42,7 @@ import java.util.List;
         public int getMaxStudents() {
             return maxStudents;
         }
-        
-        // Returns the number of credits for this course
+
         public int getCredits() {
             return credits;
         }
