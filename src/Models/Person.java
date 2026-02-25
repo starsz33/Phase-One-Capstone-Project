@@ -12,8 +12,9 @@ public abstract class Person {
         return name;
     }
 
+    // Fixed: Added 'this' keyword to properly set the name field
     public void setPname(String name) {
-        name = name;
+        this.name = name;
     }
 
     public String getEmail() {

@@ -5,12 +5,12 @@ import java.util.Map;
 
 public class Student extends Person {
     private String Department;
-    private int studentId;
-    private double GPA=0.0;
+    private String studentId;
+    private double GPA = 0.0;
     protected int totalCredit;
     Map<Course, Double> courseMap;
 
-    public Student(String name, String email, String Department,int studentId) {
+    public Student(String name, String email, String Department, String studentId) {
         super(name, email);
         this.Department = Department;
         this.studentId = studentId;
@@ -25,11 +25,11 @@ public class Student extends Person {
         Department = department;
     }
 
-    public int getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
@@ -40,17 +40,16 @@ public class Student extends Person {
     public void setTotalCredits(int totalCredit) {
         this.totalCredit = totalCredit;
     }
-
-    //    public void setGPA(int GPA) {
-//        this.GPA = GPA;
-//    }
+    // Adds a course to the student's course map and updates total credits
     public void addCourse(Course course) {
         courseMap.put(course, 0.0);
+        totalCredit += course.getCredits(); // Update total credits for tuition calculation
     }
 
     public Map<Course, Double> getCourses() {
         return courseMap;
     }
+
     public void updateGrade(Course course, double grade) {
         if (courseMap.containsKey(course)) {
             courseMap.put(course, grade);
@@ -58,7 +57,7 @@ public class Student extends Person {
         }
     }
 
-    private void calculateGPA() {
+    public double calculateGPA() {
         double total = 0;
 
         for (double grade : courseMap.values()) {
@@ -68,7 +67,9 @@ public class Student extends Person {
         if (!courseMap.isEmpty()) {
             this.GPA = total / courseMap.size();
         }
+        return GPA;
     }
+
     public double calculateTuition() {
         return 0;
     }
@@ -78,5 +79,6 @@ public class Student extends Person {
         return "Student: " + getname() + ", ID: " + studentId;
     }
 }
+
 
 

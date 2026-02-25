@@ -18,15 +18,15 @@ import Exception.StudentAlreadyEnrolledException;
             Course ds = new Course("ET44","Java Programming ",50,70);
             Course ai = new Course("CS201", "Artificial Intelligence", 8,50);
 
-            manager.createCourse(java);
-            manager.createCourse(ds);
-            manager.createCourse(ai);
+            manager.addCourse(java);
+            manager.addCourse(ds);
+            manager.addCourse(ai);
 
             // create Student
-            Student s1 = new UndergraduateStudent("Kaline", "Esthe@gmail.com", "Computer Science",33333);
-            Student s2 = new UndergraduateStudent("Uwera", "Anne@gmail.com", "Computer Science",22201);
-            Student s3 = new GraduateStudent("Esther","est@gmail.com","Information Technology",5555,6000);
-            Student s4 = new GraduateStudent("Aline", "Sarah@gmail.com", "Information Systems",444477,6000);
+            Student s1 = new UndergraduateStudent("Kaline", "Esthe@gmail.com", "Computer Science","5555");
+            Student s2 = new UndergraduateStudent("Uwera", "Anne@gmail.com", "Computer Science","22201");
+            Student s3 = new GraduateStudent("Esther","est@gmail.com","Information Technology","5555",6000);
+            Student s4 = new GraduateStudent("Aline", "Sarah@gmail.com", "Information Systems","77777",6000);
 
             manager.registerStudent(s1);
             manager.registerStudent(s2);
@@ -35,22 +35,28 @@ import Exception.StudentAlreadyEnrolledException;
 
             try {
 
-                manager.enrollStudentInCourse(s1, java);
-                manager.enrollStudentInCourse(s1, ds);
+                manager.enrollStudentInCourse("2201365","coe");
+                manager.enrollStudentInCourse("5444","ggg");
 
-                manager.enrollStudentInCourse(s2, java);
-                manager.enrollStudentInCourse(s2, ds);
+                manager.enrollStudentInCourse("88888","ppp");
+                manager.enrollStudentInCourse("77777","uuu009");
 
-                manager.enrollStudentInCourse(s3, java);
-                manager.enrollStudentInCourse(s3, ai);
+                manager.enrollStudentInCourse("6666","nnnn");
+                manager.enrollStudentInCourse("888","bbbbn");
 
-                manager.enrollStudentInCourse(s4, ai);
-                manager.enrollStudentInCourse(s1, java);
+                manager.enrollStudentInCourse("6666","bbbu09");
+                manager.enrollStudentInCourse("7778","vgg88");
 
             } catch (CourseFullException e) {
                 System.out.println("FULL ERROR: " + e.getMessage());
-            } catch (StudentAlreadyEnrolledException e) {
+            } catch (Exception e) {
                 System.out.println("DUPLICATE ERROR: " + e.getMessage());
+            }
+            try {
+                manager.enrollStudentInCourse(s1.getStudentId(), ai.getCourseCode());
+                System.out.println("Enrollment successful!");
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
 
             s1.updateGrade(java, 3.7);
@@ -75,7 +81,7 @@ import Exception.StudentAlreadyEnrolledException;
                         " | GPA: " + top.getGPA());
             }
             System.out.println("\n=== ALL STUDENTS ===");
-            for (Student s : manager.getStudents()) {
+            for (Student s : manager.getAllStudents()) {
                 System.out.println(s.getname() +
                         " | Dept: " + s.getDepartment() +
                         " | GPA: " + s.getGPA());
