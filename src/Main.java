@@ -142,9 +142,10 @@ public class Main {
                         System.out.println("Name: " + student.getname());
                         System.out.println("Department: " + student.getDepartment());
                         System.out.printf("GPA: %.2f%n", student.getGPA());
+                        System.out.printf("Tuition Fee: $%.2f%n", student.calculateTuition());
                         System.out.println("Courses:");
                         student.getCourses().forEach((course, grade) ->
-                                System.out.println(course.getCourseCode() + " | Grade: " + grade));
+                                System.out.println("  " + course.getCourseCode() + " - " + course.getCourseName() + " | Grade: " + grade));
                     } else {
                         System.out.println("Student not found!");
                     }
