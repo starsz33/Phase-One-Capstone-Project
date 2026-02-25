@@ -4,15 +4,19 @@ import Models.Student;
 import Models.UndergraduateStudent;
 import Models.GraduateStudent;
 import Models.Course;
+import Models.Instructor;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FileManager {
 
     private static final String STUDENT_FILE = "students.csv";
     private static final String COURSE_FILE = "courses.csv";
+    private static final String ENROLLMENT_FILE = "enrollments.csv";
+    private static final String INSTRUCTOR_FILE = "instructors.csv";
 
     // ===================== STUDENT FILE HANDLING =====================
 
@@ -134,5 +138,124 @@ public class FileManager {
             System.out.println("Error loading courses: " + e.getMessage());
         }
         return courses;
+    }
+
+    // ===================== ENROLLMENT FILE HANDLING =====================
+
+    // Save enrollments to CSV file
+    public static void saveEnrollments(List<Student> students) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ENROLLMENT_FILE))) {
+            // Write CSV header
+            writer.write("StudentID,CourseCode,Grade\n");
+            
+            // Write each enrollment
+            for (Student student : students) {
+                for (Map.Entry<Course, Double> entry : student.getCourses().entrySet()) {
+                    writer.write(String.format("%s,%s,%.2f\n",
+                            student.getStudentId(),
+                            entry.getKey().getCourseCode(),
+                            entry.getValue()));
+                }
+            }
+            System.out.println("Enrollments saved successfully to " + ENROLLMENT_FILE);
+        } catch (IOException e) {
+            System.out.println("Error saving enrollments: " + e.getMessage());
+        }
+    }
+
+    // Load enrollments from CSV file
+    public static void loadEnrollments(List<Student> students, List<Course> courses) {
+        File file = new File(ENROLLMENT_FILE);
+        
+        if (!file.exists()) {
+            System.out.println("No previous enrollment data found.");
+            return;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(ENROLLMENT_FILE))) {
+            String line = reader.readLine(); // Skip header
+            
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 3) {
+                    String studentId = parts[0];
+                    String courseCode = parts[1];
+                    double grade = Double.parseDouble(parts[2]);
+                    
+                    // Find student and course
+                    Student student = students.stream()
+                            .filter(s -> s.getStudentId().equals(studentId))
+                            .findFirst()
+                            .orElse(null);
+                    
+                    Course course = courses.stream()
+                            .filter(c -> c.getCourseCode().equals(courseCode))
+                            .findFirst()
+                            .orElse(null);
+                    
+                    // Restore enrollment
+                    if (student != null && course != null) {
+                        student.getCourses().put(course, grade);
+                        course.getStudents().add(student);
+                        student.setTotalCredits(student.getTotalCredits() + course.getCredits());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading enrollments: " + e.getMessage());
+        }
+    }
+
+    // ===================== INSTRUCTOR FILE HANDLING =====================
+
+    // Save instructors to CSV file
+    public static void saveInstructors(List<Instructor> instructors) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(INSTRUCTOR_FILE))) {
+            // Write CSV header
+            writer.write("Name,Email,Department,Salary\n");
+            
+            // Write each instructor
+            for (Instructor instructor : instructors) {
+                writer.write(String.format("%s,%s,%s,%d\n",
+                        instructor.getname(),
+                        instructor.getEmail(),
+                        instructor.getDepartment(),
+                        instructor.getSalary()));
+            }
+            System.out.println("Instructors saved successfully to " + INSTRUCTOR_FILE);
+        } catch (IOException e) {
+            System.out.println("Error saving instructors: " + e.getMessage());
+        }
+    }
+
+    // Load instructors from CSV file
+    public static List<Instructor> loadInstructors() {
+        List<Instructor> instructors = new ArrayList<>();
+        File file = new File(INSTRUCTOR_FILE);
+        
+        if (!file.exists()) {
+            System.out.println("No previous instructor data found.");
+            return instructors;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(INSTRUCTOR_FILE))) {
+            String line = reader.readLine(); // Skip header
+            
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4) {
+                    String name = parts[0];
+                    String email = parts[1];
+                    String department = parts[2];
+                    int salary = Integer.parseInt(parts[3]);
+                    
+                    Instructor instructor = new Instructor(name, email, department, salary);
+                    instructors.add(instructor);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading instructors: " + e.getMessage());
+        }
+        return instructors;
     }
 }

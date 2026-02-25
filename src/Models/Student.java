@@ -40,6 +40,10 @@ public class Student extends Person {
     public void setTotalCredits(int totalCredit) {
         this.totalCredit = totalCredit;
     }
+    
+    public int getTotalCredits() {
+        return totalCredit;
+    }
     // Adds a course to the student's course map and updates total credits
     public void addCourse(Course course) {
         courseMap.put(course, 0.0);

@@ -4,6 +4,7 @@ import Exception.CourseFullException;
 import Exception.StudentAlreadyEnrolledException;
 import Models.Student;
 import Models.Course;
+import Models.Instructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +13,12 @@ public class UniversityManager {
 
     private final List<Student> students;
     private final List<Course> courses;
+    private final List<Instructor> instructors;
 
     public UniversityManager() {
         this.students = new ArrayList<>();
         this.courses = new ArrayList<>();
+        this.instructors = new ArrayList<>();
     }
     public void registerStudent(Student student) {
         students.add(student);
@@ -91,5 +94,14 @@ public class UniversityManager {
         }
 
         return topStudent;
+    }
+
+    // ----------------- Instructors -----------------
+    public void registerInstructor(Instructor instructor) {
+        instructors.add(instructor);
+    }
+
+    public List<Instructor> getAllInstructors() {
+        return instructors;
     }
 }

@@ -1,5 +1,5 @@
 StudentID,Name,Email,Department,GPA,Type,AmountPerCredit
 111,UWINGENEYE Esther,estheruw11@gmail.com,CSE,0.00,Undergraduate,0
 222,Kaline,kaline@gmail.com,IT,0.00,Undergraduate,0
-444,Anne,anne@gmail.com,Mining,3.89,Undergraduate,0
+444,Anne,anne@gmail.com,Mining,0.00,Undergraduate,0
 555,Derrick,derr@gmail.com,Computer Science,0.00,Graduate,5000

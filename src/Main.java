@@ -2,6 +2,7 @@ import Models.Student;
 import Models.UndergraduateStudent;
 import Models.GraduateStudent;
 import Models.Course;
+import Models.Instructor;
 import Service.UniversityManager;
 import FileManager.FileManager;
 import Exception.CourseFullException;
@@ -29,6 +30,17 @@ public class Main {
             }
         }
 
+        // Load enrollments after students and courses are loaded
+        FileManager.loadEnrollments(manager.getAllStudents(), manager.getAllCourses());
+
+        // Load instructors
+        List<Instructor> loadedInstructors = FileManager.loadInstructors();
+        if (loadedInstructors != null) {
+            for (Instructor i : loadedInstructors) {
+                manager.registerInstructor(i);
+            }
+        }
+
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -40,7 +52,8 @@ public class Main {
             System.out.println("4. Update Student Grade");
             System.out.println("5. View Student Record");
             System.out.println("6. Generate Dean's List (GPA > 3.5)");
-            System.out.println("7. Save & Exit");
+            System.out.println("7. Instructor Management");
+            System.out.println("8. Save & Exit");
             System.out.print("Select an option: ");
             String choice = scanner.nextLine();
 
@@ -172,8 +185,14 @@ public class Main {
                 }
 
                 case "7" -> {
+                    instructorMenu(scanner, manager);
+                }
+
+                case "8" -> {
                     FileManager.saveStudents(manager.getAllStudents());
                     FileManager.saveCourses(manager.getAllCourses());
+                    FileManager.saveEnrollments(manager.getAllStudents());
+                    FileManager.saveInstructors(manager.getAllInstructors());
                     System.out.println("Data saved. Exiting...");
                     running = false;
                 }
@@ -183,5 +202,59 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    // Instructor Management Submenu
+    private static void instructorMenu(Scanner scanner, UniversityManager manager) {
+        boolean inInstructorMenu = true;
+        
+        while (inInstructorMenu) {
+            System.out.println("\n===== INSTRUCTOR MANAGEMENT =====");
+            System.out.println("1. Register Instructor");
+            System.out.println("2. View All Instructors");
+            System.out.println("3. Back to Main Menu");
+            System.out.print("Select an option: ");
+            String choice = scanner.nextLine();
+            
+            switch (choice) {
+                case "1" -> {
+                    System.out.print("Instructor Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+                    System.out.print("Department: ");
+                    String dept = scanner.nextLine();
+                    System.out.print("Salary: ");
+                    String salaryInput = scanner.nextLine();
+                    
+                    try {
+                        int salary = Integer.parseInt(salaryInput);
+                        Instructor instructor = new Instructor(name, email, dept, salary);
+                        manager.registerInstructor(instructor);
+                        System.out.println("Instructor registered: " + instructor.getname());
+                    } catch (NumberFormatException e) {
+                        System.out.println("ERROR: Invalid salary. Please enter a valid number.");
+                    }
+                }
+                
+                case "2" -> {
+                    System.out.println("\n=== ALL INSTRUCTORS ===");
+                    if (manager.getAllInstructors().isEmpty()) {
+                        System.out.println("No instructors registered.");
+                    } else {
+                        for (Instructor i : manager.getAllInstructors()) {
+                            System.out.printf("%s | Dept: %s | Email: %s | Salary: $%d%n",
+                                    i.getname(), i.getDepartment(), i.getEmail(), i.getSalary());
+                        }
+                    }
+                }
+                
+                case "3" -> {
+                    inInstructorMenu = false;
+                }
+                
+                default -> System.out.println("Invalid choice! Try again.");
+            }
+        }
     }
 }

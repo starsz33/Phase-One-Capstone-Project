@@ -13,6 +13,11 @@ public class Instructor extends Person{
     public int getSalary() {
         return salary;
     }
+    
+    public String getDepartment() {
+        return department;
+    }
+    
     public void setSalary(int salary){
         this.salary=salary;
     }
