@@ -150,10 +150,25 @@ public class Main {
 
                 case "6" -> {
                     System.out.println("\n=== DEAN'S LIST ===");
-                    manager.getAllStudents().stream()
+                    
+                    // Display top performing student (only if GPA > 0)
+                    Student topStudent = manager.findTopPerformingStudent();
+                    if (topStudent != null && topStudent.getGPA() > 0) {
+                        System.out.printf("Top Performing Student: %s | Dept: %s | GPA: %.2f%n%n",
+                                topStudent.getname(), topStudent.getDepartment(), topStudent.getGPA());
+                    }
+                    
+                    // Display all students with GPA > 3.5
+                    System.out.println("Students with GPA > 3.5:");
+                    long count = manager.getAllStudents().stream()
                             .filter(s -> s.getGPA() > 3.5)
-                            .forEach(s -> System.out.printf("%s | Dept: %s | GPA: %.2f%n",
-                                    s.getname(), s.getDepartment(), s.getGPA()));
+                            .peek(s -> System.out.printf("%s | Dept: %s | GPA: %.2f%n",
+                                    s.getname(), s.getDepartment(), s.getGPA()))
+                            .count();
+                    
+                    if (count == 0) {
+                        System.out.println("No students qualify for Dean's List.");
+                    }
                 }
 
                 case "7" -> {
