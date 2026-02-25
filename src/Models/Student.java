@@ -57,15 +57,22 @@ public class Student extends Person {
         }
     }
 
+    // Calculates weighted GPA based on course credits
     public double calculateGPA() {
-        double total = 0;
+        double totalGradePoints = 0;
+        int totalCredits = 0;
 
-        for (double grade : courseMap.values()) {
-            total += grade;
+        for (Map.Entry<Course, Double> entry : courseMap.entrySet()) {
+            Course course = entry.getKey();
+            double grade = entry.getValue();
+            int credits = course.getCredits();
+            
+            totalGradePoints += (grade * credits);
+            totalCredits += credits;
         }
 
-        if (!courseMap.isEmpty()) {
-            this.GPA = total / courseMap.size();
+        if (totalCredits > 0) {
+            this.GPA = totalGradePoints / totalCredits;
         }
         return GPA;
     }
