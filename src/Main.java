@@ -52,18 +52,18 @@ public class Main {
                     String id = scanner.nextLine();
                     System.out.print("Department: ");
                     String dept = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
                     System.out.print("Type (1 = Undergraduate, 2 = Graduate): ");
                     String type = scanner.nextLine();
-                    System.out.println("enter your Email");
-                    String email=scanner.nextLine();
-                    System.out.println("enter amount per credit");
-                    int amount=scanner.nextInt();
 
                     Student student;
                     if ("1".equals(type)) {
-                        student = new UndergraduateStudent(name,email,dept,id);
+                        student = new UndergraduateStudent(name, email, dept, id);
                     } else {
-                        student = new GraduateStudent(name,email,dept,id,amount);
+                        // Default amount per credit for graduate students
+                        int defaultAmountPerCredit = 5000;
+                        student = new GraduateStudent(name, email, dept, id, defaultAmountPerCredit);
                     }
 
                     manager.registerStudent(student);
